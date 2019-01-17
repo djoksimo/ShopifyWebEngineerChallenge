@@ -1,23 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './star.css';
 
 class Star extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isClicked: this.props.isClicked };
+    this.handleClick = this.handleClick.bind(this);
+    this.state = { isClicked: props.isClicked };
   }
 
-  handleStarClick = () => {
-    this.props.handleStarClick();
-  };
+  handleClick(e) {
+    e.preventDefault();
+    this.setState({ isClicked: !this.props.isClicked });
+    this.props.handleStarClick(this.props.id);
+  }
 
   render() {
     return(
-      <span>
-        <svg id="star-svg" xmlns="http://www.w3.org/2000/svg">
+      <span onClick={this.handleClick}>
+        <svg
+          id="star-svg"
+          xmlns="http://www.w3.org/2000/svg">
           <polygon
-            onClick={this.handleStarClick}
             transform={'scale(0.1)'}
             points="100,10 40,180 190,60 10,60 160,180"
             fill={ this.state.isClicked ? '#269B66': '#AEAEAE'}/>
@@ -28,7 +32,7 @@ class Star extends React.Component {
 }
 
 Star.propTypes = {
-  isClicked: PropTypes.bool,
+  isClicked: PropTypes.bool.isRequired,
   handleStarClick: PropTypes.func.isRequired
 };
 
