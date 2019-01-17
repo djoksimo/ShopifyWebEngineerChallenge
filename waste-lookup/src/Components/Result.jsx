@@ -10,30 +10,40 @@ class Result extends React.Component {
     this.search = this.search.bind(this);
     this.updateSearch= this.updateSearch.bind(this);
     this.items = [];
+    this.rawData = [];
     this.state = {
       query: '',
       searchClicked: false,
       displayResults: false,
-      results: []
     }
   }
 
-  search() {
-    // this.setState({query: event});
+  search(e) {
+    e.preventDefault();
+    this.setState({searchClicked: true});
+    console.log(this.state.query);
     axios.get('https://secure.toronto.ca/cc_sr_v1/data/swm_waste_wizard_APR?limit=1000')
       .then(res => {
-        console.log(res);
-        // this.setState({ displayResults: true, results: res });
-        // this.items = this.state.results;
+        this.rawData = res.data;
+        for (let i = 0; i < res.data.length; ++i) {
+          if (res.data[i].keywords.includes(this.state.query)) {
+            this.items.push(res.data[i]);
+          }
+        }
+        console.log(this.items);
+        this.setState({ displayResults: true });
       });
   }
 
   updateSearch(event) {
-    console.log(event.target.value);
-    this.setState({query: event.target.value })
+    this.setState({query: event.target.value });
+    if (this.state.query === '') {
+      this.setState({displayResults: true});
+    }
   }
 
-  handleStarClick() {
+  handleStarClick(e) {
+    // console.log(e);
     // this.setState({ isClicked: !this.state.isClicked});
   }
 
@@ -42,10 +52,15 @@ class Result extends React.Component {
       <section>
         <div className="search-container">
           {/*Search bar*/}
-          <form onSubmit={this.search}>
+          <form>
             <div id={'search-container'}>
-              <input id={'search-input'} type="text" onChange={this.updateSearch} value={this.state.query} placeholder="Search for garbage..." />
-              <button id={'search-btn'} >
+              <input
+                id={'search-input'}
+                type="text"
+                onChange={this.updateSearch}
+                value={this.state.query}
+                placeholder="Search for garbage..." />
+              <button onClick={this.search} id={'search-btn'}>
                 <img src={require('../assets/search.png')} alt="Search" id={'main-search-icon'} />
               </button>
             </div>
@@ -53,16 +68,15 @@ class Result extends React.Component {
 
           <div className={'result-container'}>
             <table id={'result-table'}>
-              <tr>
-                <td className={'star-col'}><Star handleStarClick={this.handleStarClick} isClicked={true}/></td>
-                { this.items.map(item =>  this.state.displayResults &&  <td>a</td>)}
-                {/*<td>{{items[0].description}}</td>*/}
-              </tr>
-              <tr>
-                <td className={'star-col'}><Star handleStarClick={this.handleStarClick} isClicked={false}/></td>
-                <td>500</td>
-                <td>600</td>
-              </tr>
+              <tbody>
+              { this.state.displayResults &&
+              this.items.map(item => (
+                <tr key={this.rawData.indexOf(item)}>
+                  <td><Star handleStarClick={this.handleStarClick}/></td>
+                  <td>{item.title}</td>
+                </tr>
+              ))}
+              </tbody>
             </table>
           </div>
         </div>
