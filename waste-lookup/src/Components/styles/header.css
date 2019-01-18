@@ -1,0 +1,13 @@
+#main-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    height: 100px;
+    background: linear-gradient(to right, #24589B, #249866);
+}
+
+#main-title {
+    color: #ffffff;
+}
