@@ -23,42 +23,10 @@
     outline: 1px solid silver;
     font-size: 1em;
     padding-left: 1em;
-    min-width: 92%;
+    width: 92%;
     height: 48px;
     margin-right: 1em;
 }
-
-.result-container {
-    display: flex;
-    justify-content: center;
-    padding-top: 1.5em;
-    /*align-items: flex-start;*/
-}
-
-#result-table {
-    width: 98%;
-}
-
-td {
-    vertical-align: top;
-}
-
-ul {
-    margin-top: 0;
-}
-
-li {
-    padding-bottom: 0.5em;
-}
-
-.title-col {
-    width: 18em;
-}
-
-.star-col {
-    width: 2em;
-}
-
 
 @media (max-width: 766px) {
     #search-container {
@@ -72,18 +40,5 @@ li {
     #search-btn {
         width: 20%;
         margin-right: 0.5em;
-    }
-
-    .result-container {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-    #result-table {
-        margin-left: 1em;
-    }
-
-    .title-col {
-        width: 8em;
     }
 }
