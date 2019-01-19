@@ -2,6 +2,7 @@ import React from 'react';
 import './styles/result.css';
 import './styles/star.css';
 import Search from './Search';
+import Loader from './Loader';
 
 class Result extends React.Component {
   constructor(props) {
@@ -10,13 +11,15 @@ class Result extends React.Component {
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleFavouriteState = this.handleFavouriteState.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleSearchClick = this.handleSearchClick.bind(this);
 
     this.state = {
       displayResults: false,
       displayFavourites: false,
       favourites: new Set(), // Set used for fast lookup and preventing duplicates
       items: [],
-      rawData: []
+      rawData: [],
+      searchClicked: false
     }
   }
 
@@ -26,6 +29,10 @@ class Result extends React.Component {
       items: items,
       displayResults: displayResults
     });
+  }
+
+  handleSearchClick(searchClicked) {
+    this.setState( { searchClicked: searchClicked });
   }
   
   handleFavouriteState() {
@@ -69,8 +76,9 @@ class Result extends React.Component {
   render() {
     return (
       <div id="result-body">
-          <Search handleSearch={this.handleSearch}/>
+          <Search handleSearchClick={this.handleSearchClick} handleSearch={this.handleSearch}/>
           <div className={'result-container'}>
+            { (this.state.searchClicked && !this.state.displayResults) && <div><Loader/></div>}
             <table className={'result-table'}>
               <tbody>
               { this.state.displayResults &&

@@ -22,6 +22,7 @@ class Search extends React.Component {
     await axios.get('https://secure.toronto.ca/cc_sr_v1/data/swm_waste_wizard_APR?limit=1000')
       .then(res => {
         this.setState({ rawData: res.data });
+      //  Cache fetched data
       });
   }
 
@@ -37,16 +38,19 @@ class Search extends React.Component {
 
   search(e) {
     e.preventDefault();
+    this.props.handleSearchClick(true);
     if (!this.state.rawData.length > 0) {
       this.getRawData().then(res => {
         this.setState( { items: this.getMatchResults() });
         this.props.handleSearch(this.state.rawData, this.state.items, true);
+        this.props.handleSearchClick(false);
       }).catch(err => {
         console.error(err);
       });
     } else {
-      this.setState( { items: this.getMatchResults() });
       this.props.handleSearch(this.state.rawData, this.state.items, true);
+      this.setState( { items: this.getMatchResults() });
+      this.props.handleSearchClick(false);
     }
   }
 
@@ -54,6 +58,7 @@ class Search extends React.Component {
     this.setState({ query: event.target.value });
     if (this.state.query.length <= 1) {
       this.props.handleSearch(this.state.rawData, this.state.items, false);
+      this.props.handleSearchClick(false);
     }
   }
 
@@ -79,7 +84,8 @@ class Search extends React.Component {
 }
 
 React.propTypes = {
-  handleSearch: PropTypes.func.isRequired
+  handleSearch: PropTypes.func.isRequired,
+  handleSearchClick: PropTypes.func.isRequired
 };
 
 export default Search;
